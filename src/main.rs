@@ -12,7 +12,7 @@ impl Buffer {
         let size_in_bytes = size_in_gb * 1024 * 1024 * 1024;
         let mut vec = Vec::with_capacity(size_in_bytes / std::mem::size_of::<usize>());
 
-        for i in 0..vec.len() {
+        for i in 0..vec.capacity() {
             vec.push(i);
         }
 
