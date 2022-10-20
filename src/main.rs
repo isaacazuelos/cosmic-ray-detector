@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use clap::Parser;
 use libc;
-use log::{error, info};
+use log::{warn, info};
 use simplelog;
 
 struct Buffer(Vec<usize>);
@@ -18,8 +18,7 @@ impl Buffer {
 
         let mlock_succeeded = unsafe { libc::mlock(vec.as_ptr() as _, size_in_bytes) == 0 };
         if !mlock_succeeded {
-            error!("error: mlock(2) failed, could not guarantee pages would remain in memory");
-            std::process::exit(1);
+            warn!("mlock(2) failed, cannot guarantee pages will remain in memory");
         }
 
         Buffer(vec)
