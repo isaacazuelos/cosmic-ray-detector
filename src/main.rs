@@ -24,15 +24,18 @@ impl Buffer {
         Buffer(vec)
     }
 
-    fn scan(&mut self) {
+    fn scan(&mut self) -> usize {
+        let mut rays = 0;
         for (expected, actual) in self.0.iter().enumerate() {
             if *actual != expected {
                 info!(
                     "expected 0b{:b} (i.e. {}) but got 0b{:b}",
                     expected, expected, actual
                 );
+                rays += 1;
             }
         }
+        rays
     }
 }
 
@@ -92,12 +95,12 @@ fn main() {
     );
 
     let mut buf = Buffer::new(args.size);
-
-    let mut iteration_count = 0;
+    let mut iteration = 0;
+    let mut rays = 0;
     loop {
-        info!("iteration {}", iteration_count);
-        buf.scan();
-        iteration_count += 1;
+        info!("iteration {}, {} rays so far", iteration, rays);
+        rays += buf.scan();
+        iteration += 1;
         std::thread::sleep(std::time::Duration::from_secs(args.delay));
     }
 }
